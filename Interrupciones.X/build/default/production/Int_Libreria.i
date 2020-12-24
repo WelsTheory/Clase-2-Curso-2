@@ -5626,16 +5626,103 @@ extern __attribute__((nonreentrant)) void _delay3(unsigned char);
 # 33 "C:/Program Files (x86)/Microchip/MPLABX/v5.40/packs/Microchip/PIC18Fxxxx_DFP/1.2.26/xc8\\pic\\include\\xc.h" 2 3
 # 2 "Int_Libreria.c" 2
 
-# 1 "./Configuracion.h" 1
+# 1 "C:\\Program Files\\Microchip\\xc8\\v2.20\\pic\\include\\c99\\stdint.h" 1 3
+# 22 "C:\\Program Files\\Microchip\\xc8\\v2.20\\pic\\include\\c99\\stdint.h" 3
+# 1 "C:\\Program Files\\Microchip\\xc8\\v2.20\\pic\\include\\c99\\bits/alltypes.h" 1 3
+# 127 "C:\\Program Files\\Microchip\\xc8\\v2.20\\pic\\include\\c99\\bits/alltypes.h" 3
+typedef unsigned long uintptr_t;
+# 142 "C:\\Program Files\\Microchip\\xc8\\v2.20\\pic\\include\\c99\\bits/alltypes.h" 3
+typedef long intptr_t;
+# 158 "C:\\Program Files\\Microchip\\xc8\\v2.20\\pic\\include\\c99\\bits/alltypes.h" 3
+typedef signed char int8_t;
+
+
+
+
+typedef short int16_t;
+# 173 "C:\\Program Files\\Microchip\\xc8\\v2.20\\pic\\include\\c99\\bits/alltypes.h" 3
+typedef long int32_t;
+
+
+
+
+
+typedef long long int64_t;
+# 188 "C:\\Program Files\\Microchip\\xc8\\v2.20\\pic\\include\\c99\\bits/alltypes.h" 3
+typedef long long intmax_t;
+
+
+
+
+
+typedef unsigned char uint8_t;
+
+
+
+
+typedef unsigned short uint16_t;
+# 209 "C:\\Program Files\\Microchip\\xc8\\v2.20\\pic\\include\\c99\\bits/alltypes.h" 3
+typedef unsigned long uint32_t;
+
+
+
+
+
+typedef unsigned long long uint64_t;
+# 229 "C:\\Program Files\\Microchip\\xc8\\v2.20\\pic\\include\\c99\\bits/alltypes.h" 3
+typedef unsigned long long uintmax_t;
+# 22 "C:\\Program Files\\Microchip\\xc8\\v2.20\\pic\\include\\c99\\stdint.h" 2 3
+
+
+typedef int8_t int_fast8_t;
+
+typedef int64_t int_fast64_t;
+
+
+typedef int8_t int_least8_t;
+typedef int16_t int_least16_t;
+
+typedef int24_t int_least24_t;
+
+typedef int32_t int_least32_t;
+
+typedef int64_t int_least64_t;
+
+
+typedef uint8_t uint_fast8_t;
+
+typedef uint64_t uint_fast64_t;
+
+
+typedef uint8_t uint_least8_t;
+typedef uint16_t uint_least16_t;
+
+typedef uint24_t uint_least24_t;
+
+typedef uint32_t uint_least32_t;
+
+typedef uint64_t uint_least64_t;
+# 139 "C:\\Program Files\\Microchip\\xc8\\v2.20\\pic\\include\\c99\\stdint.h" 3
+# 1 "C:\\Program Files\\Microchip\\xc8\\v2.20\\pic\\include\\c99\\bits/stdint.h" 1 3
+typedef int32_t int_fast16_t;
+typedef int32_t int_fast32_t;
+typedef uint32_t uint_fast16_t;
+typedef uint32_t uint_fast32_t;
+# 139 "C:\\Program Files\\Microchip\\xc8\\v2.20\\pic\\include\\c99\\stdint.h" 2 3
 # 3 "Int_Libreria.c" 2
+
+# 1 "./Configuracion.h" 1
+# 4 "Int_Libreria.c" 2
 
 # 1 "./Int_Libreria.h" 1
 # 36 "./Int_Libreria.h"
 void INT_Init (void);
 void __attribute__((picinterrupt(("high_priority")))) INT0_ISR(void);
 void __attribute__((picinterrupt(("low_priority")))) INT1_ISR(void);
-# 4 "Int_Libreria.c" 2
+# 5 "Int_Libreria.c" 2
 
+
+uint8_t x = 0;
 
 void INT_Init (void){
     TRISBbits.RB0 = 1;
@@ -5646,7 +5733,7 @@ void INT_Init (void){
     INTCON3bits.INT1F = 0;
     INTCON2bits.INTEDG0 = 0;
     INTCON2bits.INTEDG1 = 0;
-    INTCON3bits.INT1IP = 1;
+    INTCON3bits.INT1IP = 0;
     RCONbits.IPEN = 1;
     INTCONbits.GIEL = 1;
     INTCONbits.GIEH = 1;
@@ -5654,16 +5741,14 @@ void INT_Init (void){
 
 void __attribute__((picinterrupt(("high_priority")))) INT0_ISR(void){
     if(INTCONbits.INT0IF){
-        LATDbits.LATD0 = ~LATDbits.LATD0;
+        x = 1;
         INTCONbits.INT0IF = 0;
-    }
-    if(INTCON3bits.INT1F){
-        LATDbits.LATD1 = ~LATDbits.LATD1;
-        INTCON3bits.INT1F = 0;
     }
 }
 
 void __attribute__((picinterrupt(("low_priority")))) INT1_ISR(void){
-
-
+    if(INTCON3bits.INT1F){
+        x = 2;
+        INTCON3bits.INT1F = 0;
+    }
 }

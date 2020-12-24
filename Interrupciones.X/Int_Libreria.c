@@ -1,7 +1,10 @@
 
 #include <xc.h>
+#include <stdint.h>
 #include "Configuracion.h"
 #include "Int_Libreria.h"
+
+uint8_t x = 0;
 
 void INT_Init (void){
     TRISBbits.RB0 = 1;
@@ -12,7 +15,7 @@ void INT_Init (void){
     INTCON3bits.INT1F = 0;// Apagamos la bandera
     INTCON2bits.INTEDG0 = 0;
     INTCON2bits.INTEDG1 = 0; // Flanco de bajada
-    INTCON3bits.INT1IP = 1;
+    INTCON3bits.INT1IP = 0;
     RCONbits.IPEN = 1; // Habilitando todas prioridades
     INTCONbits.GIEL = 1; // Habilitando prioridades bajadas
     INTCONbits.GIEH = 1; // Habilitamos prioridades altas
@@ -20,18 +23,16 @@ void INT_Init (void){
 
 void __interrupt(high_priority) INT0_ISR(void){
     if(INTCONbits.INT0IF){
-        LATDbits.LATD0 = ~LATDbits.LATD0;
+        x = 1;
         INTCONbits.INT0IF = 0;
-    }
-    if(INTCON3bits.INT1F){
-        LATDbits.LATD1 = ~LATDbits.LATD1;
-        INTCON3bits.INT1F = 0;
     }
 }
 
 void __interrupt(low_priority) INT1_ISR(void){
-//    LATDbits.LATD1 = ~LATDbits.LATD1;
-//    INTCON3bits.INT1F = 0;
+    if(INTCON3bits.INT1F){
+        x = 2;
+        INTCON3bits.INT1F = 0;
+    }
 }
 
 //void INT_Init (void){
